@@ -1,0 +1,50 @@
+import java.util.*;
+
+class Solution {
+  /**
+   * Sorts a list of words using MSD radix sort.
+   *
+   * @param words
+   *     The list of words to sort.
+   * @return The sorted list of words.
+   * @throws NullPointerException
+   *     If `words` equals `null`.
+   */
+  static List<String> radixSortMSD(List<String> words) {
+    if(words==null){
+      throw new NullPointerException();
+    }
+    words=bucketZort(words,0);
+    return words;
+
+  }
+  static List<String> bucketZort(List<String> words,int index){
+    if(words.size()<=1){
+      return words;
+    }
+    List<List<String>> list = new ArrayList<>();
+    for(int i=0;i!=26;i++){
+      list.add(new ArrayList<String>());
+    }
+    List<String> bucket= new ArrayList<>();
+    for(String word : words){
+      if(word.length()<=index){
+        bucket.add(word);
+      }else{
+      
+        list.get((int)word.charAt(index)-'a' ).add(word);
+      }
+    }
+    for(int i=0;i!=26;i++){
+        list.set(i,bucketZort(list.get(i),index+1));
+      
+      
+    }
+    for(int i=0;i!=26;i++){
+      for(String word: list.get(i)){
+        bucket.add(word);
+      }
+    }
+    return bucket;
+  }
+}
