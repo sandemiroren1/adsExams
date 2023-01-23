@@ -3,6 +3,7 @@
 import java.util.*;
 
 class Solution {
+
   /**
    * Sorts a list of words using MSD radix sort.
    *
@@ -31,10 +32,12 @@ class Solution {
     }
     for(String w : words){
       if(index>w.length()){
+        // Should be added to the result instead of a bucket(bucket 0 might also be fine, but not keep sorting it on the last index)
+        // Current if you have ["catb", "cat", "cata"] the output will become ["cata", "catb", "cat"]
         buckets.get(index(w,w.length())).add(w);
       }
       else{
-      buckets.get(index(w,index)).add(w);
+        buckets.get(index(w,index)).add(w);
       }
     }
     for(List<String> l : buckets){
@@ -43,10 +46,12 @@ class Solution {
 
     List<String> result = new ArrayList<>();
     for(List<String> l : buckets){
+      // Instead of this you can also use result.addAll which will do exactly this, but looks cleaner
       for (String w : l){
         result.add(w);
       }
     }
     return result;
   }
+
 }

@@ -23,7 +23,7 @@ class Solution {
       return words;
 
     List<String> results = new ArrayList<>();
-    List<String>[] buckets = (List<String>[]) new List[26];
+    List<String>[] buckets = new List[26];
     for(int i = 0; i < 26; i++)
       buckets[i] = new ArrayList<>();
 

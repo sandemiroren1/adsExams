@@ -1,4 +1,5 @@
 class Solution {
+
   /**
    * Counts the number of nodes in the tree at a certain level.
    *
@@ -14,8 +15,9 @@ class Solution {
     }
 
     if(level==0){
-        return 1;
+      return 1;
     }
     return countNodesAtLevel(tree.getLeft(),level-1)+countNodesAtLevel(tree.getRight(),level-1);
   }
+
 }

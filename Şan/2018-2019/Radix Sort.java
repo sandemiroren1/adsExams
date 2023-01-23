@@ -1,6 +1,7 @@
 import java.util.*;
 
 class Solution {
+
   /**
    * Sorts a list of words using MSD radix sort.
    *
@@ -31,14 +32,14 @@ class Solution {
       if(word.length()<=index){
         bucket.add(word);
       }else{
-      
+
         list.get((int)word.charAt(index)-'a' ).add(word);
       }
     }
     for(int i=0;i!=26;i++){
-        list.set(i,bucketZort(list.get(i),index+1));
-      
-      
+      list.set(i,bucketZort(list.get(i),index+1));
+
+
     }
     for(int i=0;i!=26;i++){
       for(String word: list.get(i)){
@@ -47,4 +48,5 @@ class Solution {
     }
     return bucket;
   }
+
 }

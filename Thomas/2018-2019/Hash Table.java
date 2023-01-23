@@ -21,7 +21,7 @@ class SolutionHashTable {
       throw new IllegalArgumentException();
 
     this.capacity = capacity;
-    this.table = (LinkedList<Entry>[]) new LinkedList[capacity];
+    this.table = new LinkedList[capacity];
     for(int i = 0; i < capacity; i++)
       this.table[i] = new LinkedList<>();
   }

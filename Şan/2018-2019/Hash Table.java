@@ -1,6 +1,7 @@
 import java.util.*;
 
 class SolutionHashTable {
+
   public LinkedList<Entry>[] table;
   public int capacity;
 
@@ -16,13 +17,13 @@ class SolutionHashTable {
    */
   @SuppressWarnings("unchecked")
   public SolutionHashTable(int capacity) {
-    this.capacity = capacity;
-    if (capacity<1) throw new IllegalArgumentException();
-    this.table = new LinkedList[capacity];
-    int i = 0;
-    while(i<capacity){
-      table[i] = new LinkedList<Entry>();
-      i++;
+    if(capacity<=0){
+      throw new IllegalArgumentException();
+    }
+    this.capacity=capacity;
+    table=new LinkedList[capacity];
+    for(int i=0;i!=capacity;i++){
+      table[i]=new LinkedList<Entry>();
     }
   }
 
@@ -39,16 +40,21 @@ class SolutionHashTable {
    * @return true iff entry has been added successfully, else false.
    */
   public boolean put(String key, String value) {
-      if (key == null) return false;
-      int index = hash(key);
-      for (Entry e: table[index]){
-        if (Objects.equals(e.getKey(),key)){
-          table[index].remove(e);
-          break;
-        }
+    if(key==null){
+      return false;
+    }
+    int hash= hash(key)%capacity;
+
+    for(Entry e: table[hash]){
+      if(e.getKey()==key){
+        table[hash].remove(e);
+        table[hash].add(new Entry(key,value));
+        return true;
       }
-      table[index].add(new Entry(key,value));
-      return true;
+    }
+
+    table[hash].add(new Entry(key,value));
+    return true;
   }
 
   /**
@@ -61,14 +67,16 @@ class SolutionHashTable {
    * @return value of the entry as String iff the entry with this key is found in the hash table, else null.
    */
   public String get(String key) {
-      if (key == null) return null;
-      int index = hash(key);
-      for (Entry e: table[index]){
-        if (Objects.equals(e.getKey(),key)){
-          return e.getValue();
-        }
-      }
+    if(key==null){
       return null;
+    }
+    int hash= hash(key)%capacity;
+    for(Entry e: table[hash]){
+      if(e.getKey()==key){
+        return e.getValue();
+      }
+    }
+    return null;
   }
 
   /**
@@ -81,15 +89,17 @@ class SolutionHashTable {
    * @return true iff the entry has been successfully removed, else false.
    */
   public boolean remove(String key) {
-      if (key == null) return false;
-      int index = hash(key);
-      for (Entry e: table[index]){
-        if (Objects.equals(e.getKey(),key)){
-          table[index].remove(e);
-          return true;
-        }
-      }
+    if(key==null){
       return false;
+    }
+    int hash= hash(key)%capacity;
+    for(Entry e: table[hash]){
+      if(e.getKey()==key){
+        table[hash].remove(e);
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -102,4 +112,5 @@ class SolutionHashTable {
   public int hash(String key) {
     return Math.abs(key.hashCode()) % capacity;
   }
+
 }
