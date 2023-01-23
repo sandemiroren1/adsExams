@@ -1,0 +1,34 @@
+class Solution {
+  /**
+   * Counts the number of nodes in the tree at a certain level.
+   *
+   * @param tree
+   *     The binary tree to count nodes in.
+   * @param level
+   *     The specified level to count nodes in.
+   * @return the number of nodes at that level, or 0 if tree is null.
+   */
+  public static int countNodesAtLevel(BinaryTree tree, int level) {
+    if(tree == null){
+      return 0;
+    }
+    return helper(tree, level, 0, 0);
+  }
+
+  public static int helper(BinaryTree tree, int wantedLevel, int counter, int tracker){
+    if(tracker == wantedLevel){ // we are at the wanted level
+      counter++;
+      return counter;
+    }
+
+    if(tree.hasRight()){
+      counter = helper(tree.getRight(), wantedLevel, counter, tracker + 1); // the level now increased
+    }
+
+    if(tree.hasLeft()){
+      counter = helper(tree.getLeft(), wantedLevel, counter, tracker + 1);
+    }
+    
+    return counter;
+  }
+}
