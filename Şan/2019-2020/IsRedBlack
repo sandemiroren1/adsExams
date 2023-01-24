@@ -1,0 +1,58 @@
+package weblab;
+
+
+class Solution {
+
+  /**
+   * Checks whether the given BinaryTree is a Red Black Tree.
+   * @param tree BinaryTree to check.
+   * @return True if the given tree is a Red Black Tree, false otherwise.
+   */
+  public static boolean isRedBlackTree(BinaryTree tree) {
+    if(tree==null){
+      return true;
+    }
+    if(tree.isRed()){
+      return false;
+    }
+    return checkBST(tree,Integer.MIN_VALUE,Integer.MAX_VALUE)&&checkRed(tree)&&checkBlack(tree);
+
+  }
+  public static int countBlack(BinaryTree tree){
+    if(tree==null){
+      return 0;
+    }
+    if(tree.isBlack()){
+      return 1+Math.max(countBlack(tree.getLeft()),countBlack(tree.getRight()));
+    }
+    return Math.max(countBlack(tree.getLeft()),countBlack(tree.getRight()));
+  }
+  public static boolean checkBlack(BinaryTree tree){
+    if(tree==null){
+      return true;
+    }
+    if(Math.abs(countBlack(tree.getLeft())-countBlack(tree.getRight()))!=0){
+      return false;
+    }
+    return checkBlack(tree.getLeft())&&checkBlack(tree.getRight());
+  }
+  public static boolean checkBST(BinaryTree tree, int min, int max){
+    if(tree==null){
+      return true;
+    }
+    if(tree.getValue()<=min||tree.getValue()>=max){
+      return false;
+    }
+    return checkBST(tree.getLeft(),min,tree.getValue())&&checkBST(tree.getRight(),tree.getValue(),max);
+  }
+  public static boolean checkRed(BinaryTree tree){
+    if(tree==null){
+      return true;
+    }
+    if(tree.isRed()&&((tree.getLeft()!=null&&tree.getLeft().isRed())
+    ||tree.hasRight()&&tree.getRight().isRed())){
+      return false;
+    }
+    return checkRed(tree.getLeft())&&checkRed(tree.getRight());
+  }
+}
