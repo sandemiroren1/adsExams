@@ -1,0 +1,44 @@
+package weblab;
+
+import java.util.*;
+
+class Solution {
+
+  /**
+   * Returns the length of the shortest path between vertex a and b in graph g.
+   * @param g Graph to consider.
+   * @param a Vertex to start from.
+   * @param b Vertex to go to.
+   * @return The length of the shortest path between a and b, or -1 if no such path exists.
+   */
+  public static int shortestPath(Graph g, Vertex a, Vertex b) {
+    AdaptablePQ pq= new AdaptablePQ();
+    Map<Vertex,Integer> pqTokens= new HashMap<>();
+    for(Vertex e: g.getAllVertices()){
+      if(e!=a){
+        pq.insertOrReplace(e,Integer.MAX_VALUE);
+        pqTokens.put(e,Integer.MAX_VALUE);
+      }else{
+        pq.insertOrReplace(e,0);
+        pqTokens.put(e,0);
+      }
+    }
+    while(!pq.isEmpty()){
+      VertexNumPair currPair= pq.removeMin();
+      Vertex currVertex= currPair.getVertex();
+      int currDistance= currPair.getNum();
+      for(VertexNumPair e: g.getNeighbours(currVertex)){
+        Vertex neigh= e.getVertex();
+        int edge= e.getNum();
+        if(edge+currDistance<pqTokens.get(neigh)){
+          pq.insertOrReplace(neigh,edge+currDistance);
+          pqTokens.replace(neigh,edge+currDistance);
+        }
+      }
+    }
+    if(pqTokens.get(b)==Integer.MAX_VALUE){
+      return -1;
+    }
+    return pqTokens.get(b);
+  }
+}
