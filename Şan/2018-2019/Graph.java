@@ -1,7 +1,6 @@
 import java.util.*;
 
 class Solution {
-
   /**
    * Counts the number of vertices in the same connected component as v in graph g.
    * This is done using depth first search.
@@ -18,22 +17,20 @@ class Solution {
     if(g==null||v==null){
       return 0;
     }
-    Stack<Graph.Vertex> stack = new Stack<>();
-    stack.add(v);
-    List<Graph.Vertex> visited = new ArrayList<>();
-    int number=1;
-    visited.add(v);
-    while(!stack.isEmpty()){
-      Graph.Vertex curr= stack.pop();
-      for(Graph.Vertex e: g.getNeighbours(curr)){
-        if(!visited.contains(e)){
-          stack.add(e);
-          visited.add(e);
-          number++;
-        }
+    
+    return helper(g,v,new ArrayList<>());
+  }
+  public static int helper(Graph g, Graph.Vertex v,List<Graph.Vertex> list){
+    if(v==null){
+      return 0;
+    }
+    list.add(v);
+    int returned=1;
+    for(Graph.Vertex e: g.getNeighbours(v)){
+      if(!list.contains(e)){
+        returned+=helper(g,e,list);
       }
     }
-    return number;
+    return returned;
   }
-
 }
