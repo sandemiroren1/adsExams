@@ -1,0 +1,41 @@
+import java.util.*;
+
+class Solution {
+  /**
+   * @param g
+   *     The graph to search in.
+   * @param v
+   *     The vertex to start searching from.
+   * @param n
+   *     The number of edges n that can be traversed from v.
+   * @return The number of vertices that are reachable from v (including v), using at most n edges.
+   */
+  static int countVertices(Graph g, Vertex v, int n) {
+    
+      HashSet<Vertex> added = new HashSet<>();
+      LinkedList<Vertex> bfsQueue = new LinkedList<>();
+      bfsQueue.add(v);
+      added.add(v);
+      int currentLevel = 0;
+      int res = 0;
+      while(bfsQueue.isEmpty() == false && currentLevel<=n) {
+        System.out.println("here");
+        int currentSize =bfsQueue.size();
+        res+=currentSize;
+        while(currentSize > 0) {
+          Vertex currentV = bfsQueue.poll();
+          for(Vertex neighbour : g.getNeighbours(currentV)) {
+            if(!added.contains(neighbour)) {
+              bfsQueue.add(neighbour);
+              added.add(neighbour);
+            }
+            
+          }
+          currentSize--;
+        }
+
+        currentLevel++;
+      }
+      return res;
+  }
+}
