@@ -1,0 +1,62 @@
+import java.util.*;
+class Solution {
+  /**
+   * Given a Binary Search Tree and an Integer, returns the Entry in this tree
+   * with the smallest key that is strictly larger than k.
+   *
+   * @param tree
+   *     Binary search tree to search in.
+   * @param k
+   *     The key of the resulting entry should be strictly larger than this k.
+   * @return The entry with smallest key, strictly larger than k.
+   */
+   public static String toS(BinarySearchTree tree) {
+     String res ="";
+     res+=tree.getKey();
+     return res;
+   }
+   public static String toS(Entry e) {
+     String res ="";
+     res+=e.key + " -> " + e.value;
+     return res;
+   }
+  static Entry higherEntry(BinarySearchTree tree, int k) {
+      if(tree == null)
+        return null;
+      BinarySearchTree currentTree = tree;
+      BinarySearchTree lastLeft = null;
+      while(true) {
+        System.out.println("Currently: " + toS(currentTree));
+        int currentKey = currentTree.getKey();
+        if(currentKey == k) {
+          if(currentTree.hasRight()) {
+            currentTree = currentTree.getRight();
+            continue;
+          }
+          if(lastLeft == null)
+            return null;
+          return lastLeft.getEntry();
+        }
+        else if(currentKey < k) {
+          if(!currentTree.hasRight()) {
+            if(lastLeft == null)
+              return null;
+            return lastLeft.getEntry();
+          }
+          else {
+            currentTree=currentTree.getRight();
+          }
+        }
+        else {
+          if(currentTree.hasLeft() == false) {
+            System.out.println("here");
+            return currentTree.getEntry();
+          }
+            
+          lastLeft = currentTree;
+          currentTree = currentTree.getLeft();
+        }
+      
+      }
+  }
+}
