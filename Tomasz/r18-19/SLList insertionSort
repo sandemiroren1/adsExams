@@ -1,0 +1,89 @@
+class Solution {
+  /**
+   * @param list
+   *     The singly linked list to sort.
+   * @return A new singly linked list that contains the elements as the input list sorted in non-decreasing order.
+   */
+   public static SLList copySLL(SLList list) {
+    // System.out.println(toS(list));
+    SLList res = new SLList();
+    List<Integer> copied = new ArrayList<>();
+    SLList.Node start = list.getFirst();
+    while(start!=null) {
+      copied.add(start.getElement());
+      start = start.getNext();
+
+    }
+    for(int i=copied.size()-1;i>=0;i--) {
+      res.addFirst(copied.get(i));
+    }
+    // System.out.println(toS(res));
+    return res;
+     
+   }
+
+   public static String toS(SLList list) {
+     SLList.Node curr = list.getFirst();
+     String res="";
+     while(curr != null) {
+       res+=curr.getElement() + ", ";
+       curr = curr.getNext();
+     }
+     return res;
+   }
+
+  static SLList insertionSort(SLList list) {
+    if(list == null)
+      return null;
+    int size = 1;
+    SLList.Node currentInit = list.getFirst();
+    if(currentInit == null) 
+      return new SLList();
+    while(currentInit.getNext() != null) {
+      currentInit = currentInit.getNext();
+      size++;
+    }
+    if(size == 1) {
+      //System.out.println(toS(new SLList(list.getFirst().getElement())));
+      return new SLList(list.getFirst().getElement());
+    }
+    //System.out.println((list == copySLL(list)) + " " + list.equals( copySLL(list)));
+    list = copySLL(list);
+    list.addFirst(Integer.MIN_VALUE);
+    list.addFirst(Integer.MIN_VALUE);
+    list.addFirst(Integer.MIN_VALUE);
+    size+=3;
+
+    for(int i=1;i<size-3;i++) {
+
+      //get to ith from the end
+      SLList.Node prev = list.getFirst();
+      for(int j=0;j<size-i-2;j++) 
+        prev = prev.getNext();
+      SLList.Node current = prev.getNext();
+      //System.out.println(toS(list));
+      //System.out.println("We will start moving from: " + current.getElement());
+      while(current.getNext() != null) {
+        if(current.getElement() > current.getNext().getElement()) {
+          swapNext(prev, current);
+        }
+        else 
+          break;
+        prev = prev.getNext();
+      }
+
+
+    }
+    list.removeFirst();
+    list.removeFirst();
+    list.removeFirst();
+    //System.out.println(toS(list));
+    return list;
+  }
+  public static void swapNext(SLList.Node prev, SLList.Node curr) {
+    SLList.Node next = curr.getNext();
+    prev.setNext(next);
+    curr.setNext(curr.getNext().getNext());
+    next.setNext(curr);
+  }
+}
