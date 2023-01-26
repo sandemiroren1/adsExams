@@ -1,0 +1,35 @@
+package weblab;
+
+class Solution {
+
+  /**
+   * Sorts the indices of the array based on the corresponding value in alphabetical order.
+   * Returns null if the input array is null.
+   *
+   * Example: The array ["c","a","b"] will result in [1, 2, 0].
+   *
+   * @param arr array of Strings that stored the values
+   * @return the indices in sorted order
+   */
+  public static int[] indexSort(String[] arr) {
+    if(arr == null)
+      return null;
+    int n = arr.length;
+    int[] res = new int[n];
+    for(int i=0;i<n;i++) {
+      res[i] = i;
+    }
+    for(int i=0;i<n;i++) {
+      for(int j=i;j>=1;j--) {
+        if(arr[res[j]].compareTo(arr[res[j-1]]) < 0 )
+          swap(res, j, j-1);
+      }
+    }
+    return res;
+  }
+  public static void swap(int[] a, int i, int j) {
+    int temp = a[i];
+    a[i] = a[j];
+    a[j] = temp;
+  }
+}
