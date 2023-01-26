@@ -1,0 +1,61 @@
+package weblab;
+
+class Solution {
+
+  /**
+   * Checks whether the given BinaryTree is a Red Black Tree.
+   * @param tree BinaryTree to check.
+   * @return True if the given tree is a Red Black Tree, false otherwise.
+   */
+  public static boolean isRedBlackTree(BinaryTree tree) {
+    if(tree == null)
+      return true;
+    
+    return tree.isBlack() && blackDepthCond(tree) 
+          && bstCond(tree, Integer.MIN_VALUE, Integer.MAX_VALUE)
+          && noTwoRedCond(tree);
+  }
+
+  public static boolean noTwoRedCond(BinaryTree tree) {
+    if(tree == null)
+      return true;
+    if(!(noTwoRedCond(tree.getLeft()) && noTwoRedCond(tree.getRight())))
+      return false;
+    if(tree.isBlack())
+      return true;
+    if(tree.hasLeft() && tree.getLeft().isRed())
+      return false;
+    if(tree.hasRight() && tree.getRight().isRed())
+      return false;
+
+    return true;
+    
+  }
+  public static boolean bstCond(BinaryTree tree, int minAl, int maxAl) {
+    if(tree == null)
+      return true;
+    if(tree.getValue() <= minAl || tree.getValue() >= maxAl)
+      return false;
+    return bstCond(tree.getLeft(), minAl, tree.getValue()) 
+        && bstCond(tree.getRight(), tree.getValue(), maxAl);
+  }
+  
+  public static boolean blackDepthCond(BinaryTree tree) {
+    return calculateMinBlackDepth(tree) == calculateMaxBlackDepth(tree);
+  }
+  public static int calculateMinBlackDepth(BinaryTree tree) {
+    if(tree == null)
+      return 0;
+    if(tree.isRed())
+      return Math.min(calculateMinBlackDepth(tree.getLeft()), calculateMinBlackDepth(tree.getRight()));
+    return 1+Math.min(calculateMinBlackDepth(tree.getLeft()), calculateMinBlackDepth(tree.getRight()));
+  }
+
+  public static int calculateMaxBlackDepth(BinaryTree tree) {
+    if(tree == null)
+      return 0;
+    if(tree.isRed())
+      return Math.max(calculateMaxBlackDepth(tree.getLeft()), calculateMaxBlackDepth(tree.getRight()));
+    return 1+Math.max(calculateMaxBlackDepth(tree.getLeft()), calculateMaxBlackDepth(tree.getRight()));
+  }
+}
