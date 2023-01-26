@@ -4,6 +4,7 @@ class Solution {
    *     The singly linked list to sort.
    * @return A new singly linked list that contains the elements as the input list sorted in non-decreasing order.
    */
+   //Horrible implementation, don't uncomment printing...
    public static SLList copySLL(SLList list) {
     // System.out.println(toS(list));
     SLList res = new SLList();
