@@ -1,0 +1,50 @@
+package weblab;
+
+import java.util.*;
+
+class Solution {
+
+  /**
+   * Returns the length of the shortest path between vertex a and b in graph g.
+   * @param g Graph to consider.
+   * @param a Vertex to start from.
+   * @param b Vertex to go to.
+   * @return The length of the shortest path between a and b, or -1 if no such path exists.
+   */
+  public static int shortestPath(Graph g, Vertex a, Vertex b) {
+    if(g == null || a == null || b == null)
+      return -1;
+    if(a==b)
+      return 0;
+    HashSet<Vertex> visited = new HashSet<>();
+    Map<Vertex, Integer> distances = new HashMap<>();
+
+    for(Vertex v : g.getAllVertices())
+      distances.put(v, Integer.MAX_VALUE);
+    
+
+    AdaptablePQ pqDijkstra = new AdaptablePQ();
+    distances.put(a,0);
+    pqDijkstra.insertOrReplace(a, 0);
+
+    while(!pqDijkstra.isEmpty()) {
+      VertexNumPair vp = pqDijkstra.removeMin();
+      Vertex current = vp.getVertex();
+      int currentDist = vp.getNum();
+      
+      visited.add(current);
+      if(current == b)
+        return currentDist;
+
+      for(VertexNumPair neighbourPair : current.getNeighbours()) {
+        Vertex neighbour = neighbourPair.getVertex();
+        int weight = neighbourPair.getNum();
+        if(distances.get(neighbour) == Integer.MAX_VALUE || distances.get(neighbour) > currentDist+weight) {
+          pqDijkstra.insertOrReplace(neighbour, currentDist+weight);
+          distances.put(neighbour, currentDist+weight);
+        }
+      }
+    }
+    return -1;
+  }
+}
