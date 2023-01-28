@@ -1,0 +1,33 @@
+package weblab;
+
+import java.util.*;
+
+public class Solution {
+
+    /**
+     * Returns the indices of the vertices in G in topological order, as far as possible.
+     * @param g Graph to form a topological order of.
+     * @return List of IDs of vertices in G in topological order.
+     */
+    public static List<Integer> topoOrder(Graph g) {
+        Map<Vertex, Integer> inDegrees = new HashMap<>();
+        Queue<Vertex> topoQueue  = new LinkedList<>();
+        List<Integer> res = new ArrayList<>();
+        for(Vertex v : g.getAllVertices()) {
+            inDegrees.put(v, v.getIncomingNeighbours().size());
+            if(v.getIncomingNeighbours().size() == 0)
+                topoQueue.add(v);
+        }
+        while(!topoQueue.isEmpty()) {
+            Vertex current = topoQueue.poll();
+
+            res.add(current.getId());
+            for(Vertex neigbour : current.getOutgoingNeighbours()) {
+                inDegrees.put(neigbour, inDegrees.get(neigbour)-1);
+                if(inDegrees.get(neigbour) == 0)
+                    topoQueue.add(neigbour);
+            }
+        }
+        return res;
+    }
+}
