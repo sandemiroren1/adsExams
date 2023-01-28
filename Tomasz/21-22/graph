@@ -1,0 +1,76 @@
+package weblab;
+
+import java.util.*;
+
+class GraphChecker {
+
+    /**
+     * Traverses the given graph depth first and returns the IDs of visited vertices in order, starting from the given vertex.
+     * In case multiple choices are possible for a next vertex, they are visited in increasing order of ID.
+     * Runs in O(V+E) time. Does not modify the input graph.
+     * @param g Graph to traverse.
+     * @param v Vertex to start the traversal from.
+     * @return List of IDs of vertices found using DFS traversal.
+     */
+    public List<Integer> traverseDepthFirst(Graph g, Vertex v) {
+        List<Integer> res = new ArrayList<>();
+        HashSet<Vertex> visited = new HashSet<>();
+        dfs(v, visited, res);
+        return res;
+    }
+    public void dfs(Vertex v, HashSet<Vertex> visited, List<Integer> res) {
+        res.add(v.getId());
+        visited.add(v);
+        for(Vertex neighbour : v.getNeighbours()) {
+            if(!visited.contains(neighbour))
+                dfs(neighbour, visited, res);
+        }
+    }
+
+    /**
+     * Returns the transpose of the given graph, i.e. a graph with all edges reversed.
+     * Runs in O(V+E) time. Does not modify the input graph.
+     * @param g Graph to create the transpose of.
+     * @return Transpose of the given graph.
+     */
+    public Graph transpose(Graph g) {
+        Graph res = new Graph();
+        for(Vertex v : g.getAllVertices()) {
+            Vertex copy = new Vertex(v.getId());
+            res.addVertex(copy);
+        }
+        for(Vertex v : g.getAllVertices()) {
+            Vertex vCopy = res.getVertex(v.getId());
+            for(Vertex neighbour : v.getNeighbours()) {
+                res.addEdge(res.getVertex(neighbour.getId()), vCopy);
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Returns true if the given graph is strongly connected, false otherwise.
+     * Runs in O(V+E) time. Does not modify the input graph.
+     * @param g Graph to check for strong connectedness.
+     * @return True if the graph is strongly connected, false otherwise.
+     */
+    public boolean isStronglyConnected(Graph g) {
+         if(g==null)
+            return false;
+        if(g.getAllVertices() == null || g.getAllVertices().size() == 0)
+            return false;
+        Vertex v = g.getAllVertices().get(0);
+        List<Integer> dfs = traverseDepthFirst(g, v);
+        Graph gT = transpose(g);
+        List<Integer> dfsT = traverseDepthFirst(transpose(g), gT.getAllVertices().get(0));
+        System.out.println(dfs);
+        System.out.println(dfsT);
+        if(dfs.size() != g.getAllVertices().size())
+            return false;
+        for(int u : dfs) {
+            if(dfsT.contains(u) == false)   
+                return false;
+        }
+        return true;
+    }
+}
