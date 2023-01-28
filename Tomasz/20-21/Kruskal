@@ -1,0 +1,38 @@
+package weblab;
+
+import java.util.*;
+
+class Solution {
+
+  /**
+   * @param village Adjacency map representing the village.
+   * @param coatiHouses The IDs of the coati houses that should be connected.
+   * @return The roads on which the traps should be dismantled.
+   */
+  public static Set<Road> regroupTheCoatis(List<Map<Integer, Integer>> village, Set<Integer> coatiHouses) {
+    Set<Road> res = new HashSet<>();
+    UnionFind uf = new UnionFind(village.size());
+    PriorityQueue<Road> pqKruskal = new PriorityQueue<>();
+    for(int i=0;i<village.size();i++) {
+      if(coatiHouses.contains(i) == false)
+        continue;
+      for(Map.Entry<Integer, Integer> e : village.get(i).entrySet()) {
+        if(coatiHouses.contains(e.getKey()) == false)
+          continue;
+        pqKruskal.add(new Road(i, (int)e.getKey(), (int)e.getValue()));
+      }
+    }
+
+    while(pqKruskal.isEmpty() == false && res.size() < coatiHouses.size() -1 ) {
+      Road current = pqKruskal.poll();
+      if(uf.find(current.getTo()) != uf.find(current.getFrom())) {
+        res.add(current);
+        uf.union(current.getTo(), current.getFrom());
+      }
+    }
+    if(res.size() < coatiHouses.size() -1)
+      return null;
+    return res;
+  }
+  
+}
