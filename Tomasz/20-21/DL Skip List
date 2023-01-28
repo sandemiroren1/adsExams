@@ -1,0 +1,123 @@
+package weblab;
+
+class CoatiList {
+
+  private CoatiNode head;
+
+  private CoatiNode tail;
+
+  public CoatiNode getHead() {
+    return head;
+  }
+
+  public CoatiNode getTail() {
+    return tail;
+  }
+  public String toString() {
+    String res = "<";
+    CoatiNode curr = this.head;
+    while(curr != null) {
+      res+="Node: " + curr.getValue() + " prev3: " + (curr.getSkipBack() == null ? null :  curr.getSkipBack().getValue());
+      res+=" prev1: " + (curr.getPrevious() == null ? null :  curr.getPrevious().getValue());
+      res+=" next1: " + (curr.getNext() == null ? null :  curr.getNext().getValue());
+      res+=" next3: " + (curr.getSkipAhead() == null ? null :  curr.getSkipAhead().getValue());
+      curr = curr.getNext();
+      res+="\n";
+    }
+    return res+">";
+  }
+  /**
+   * Adds value v in a new node to the head of the list.
+   *
+   * @param v Value to add.
+   */
+  public void addFirst(int v) {
+    if(head == null) {
+      //System.out.println("here");
+      this.head = new CoatiNode(v, null, null);
+      this.tail = head;
+      //System.out.println(this);
+      return;
+    }
+    CoatiNode n = new CoatiNode(v, null, head);
+    CoatiNode front3 = getFront3(head);
+    n.setSkipAhead(front3);
+    if(front3 != null)
+      front3.setSkipBack(n);
+    this.head.setPrevious(n);
+    this.head = n;
+
+  }
+  public CoatiNode getFront3(CoatiNode current) {
+    int idx = 0;
+    while(idx < 2) {
+      current = current.getNext();
+      idx++;
+      if(current == null)
+        return null;
+    }
+    return current;
+  }
+  public void update() {
+    CoatiNode cn = getFront3(this.head);
+    //System.out.println("TU: " + cn.getValue()+"\n\n");
+    if(cn != null) {
+      // cn =cn.getNext();
+      // if(cn != null) 
+        cn.setSkipBack(null);
+    }
+  }
+  /**
+   * Remove the first node in the list and return its value.
+   *
+   * @return The value of the head node.
+   * @throws EmptyListException If the list is empty.
+   */
+  public int removeFirst() {
+
+    if(head == null) {
+      throw new EmptyListException();
+    }
+    int res = head.getValue();
+    CoatiNode front3 = getFront3(head);
+    CoatiNode newH = this.head.getNext();
+    if(newH == null) {
+      head = null;
+      tail = null;
+      return res;
+    }
+    newH.setPrevious(null);
+    this.head = newH;
+    update();
+    return res;
+  }
+
+  /**
+   * Returns the value of node at the given position.
+   * @param pos Position to look for.
+   * @return The value of the node at the given position.
+   * @throws IllegalIndexException If there is no node at this index.
+   */
+  public int getValueAtPosition(int pos) {
+    if(head == null) 
+      throw new IllegalIndexException();
+    if(pos < 0)
+      throw new IllegalIndexException();
+    int currentIdx = 0;
+    CoatiNode currentNode = head;
+    while(pos >= currentIdx+3) {
+     // System.out.println("Current idx: " + currentIdx);
+      currentIdx+=3;
+      currentNode= currentNode.getSkipAhead();
+      if(currentNode == null)
+        throw new IllegalIndexException();
+    }
+    while(pos != currentIdx) {
+      currentIdx++;
+      currentNode = currentNode.getNext();
+      if(currentNode == null)
+        throw new IllegalIndexException();
+    }
+    return currentNode.getValue();
+  }
+}
