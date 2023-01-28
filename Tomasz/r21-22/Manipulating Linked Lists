@@ -1,0 +1,90 @@
+package weblab;
+
+class ADSLinkedList<T> {
+
+    Node<T> head;
+
+    public String toString() {
+        String res="<";
+        Node<T> curr = this.head;
+        while(curr != null) {
+            res+=curr.getElement() + ", ";
+            curr = curr.getNext();
+        }
+        return res+">";
+    }
+    /**
+     * Removes every other element from the list.
+     */
+    public void remove() {
+        if(head == null)
+            return;
+        Node<T> curr = this.head;
+        while(curr!=null && curr.getNext() != null) {
+            curr.setNext(curr.getNext().getNext());
+            curr = curr.getNext();
+        }
+        
+    }
+
+    /**
+     * Reverses the list.
+     */
+    public void reverse() {
+        if(head == null)
+            return;
+        Node<T> prev = this.head;
+        Node<T> curr = this.head.getNext();
+        Node<T> next;
+        System.out.println(this);
+        while(curr != null) {
+            System.out.println("Currently: " + curr.getElement());
+            next = curr.getNext();
+            System.out.println("Next: " + (curr.getNext() == null ? "null" : curr.getNext().getElement()   ) );
+            curr.setNext(prev);
+            
+            prev = curr;
+            curr = next;
+            if(curr == null) {
+                System.out.println("TBB");
+                break;
+            }
+            
+        }
+        this.head.setNext(null);
+        this.head = prev;
+        System.out.println(this);
+    }
+
+    /**
+     * Rearranges the nodes such that all nodes with even indices end
+     * up packed together at the front, and all nodes with odd indices
+     * end up packed together at the back.
+     *
+     * Note: the first node in the list corresponds to index 0,
+     * which is considered even.
+     */
+    public void pack() {
+        if(head == null)
+            return;
+        Node<T> firstOdd = head.getNext();
+        Node<T> currEven = this.head;
+        Node<T> currOdd = firstOdd;
+        Node<T> lastEven = currEven;
+        while(currEven!=null && currEven.getNext() != null) {
+            
+            currEven.setNext(currEven.getNext().getNext());
+            lastEven = currEven;
+            System.out.println("LE: " + lastEven.getElement());
+            currEven = currEven.getNext();
+            if(currEven!=null) {
+                currOdd.setNext(currEven.getNext());
+            }
+            currOdd = currOdd.getNext();
+        }
+        if(lastEven.getNext() != null)
+            lastEven = lastEven.getNext();
+        lastEven.setNext(firstOdd);
+        // TODO
+    }
+}
