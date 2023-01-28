@@ -1,0 +1,72 @@
+package weblab;
+
+import java.util.*;
+
+class QuickSelect {
+
+    /**
+     * Creates a random partition in a subarray of the input array in-place
+     * and returns the index of the pivot.
+     * You may assume all items in arr are distinct.
+     *
+     * @param arr Array to partition.
+     * @param left Lower bound of the subarray to partition (inclusive).
+     * @param right Upper bound of the subarray to partition (inclusive).
+     * @return The index of the pivot after partitioning the array.
+     */
+    public int partition(int[] arr, int left, int right) {
+        int pivotIdx = left+(int)((right-left+1) * Math.random());
+        int pivot = arr[pivotIdx];
+  
+        swap(arr, pivotIdx, right);
+        int leftIdx = left;
+        //System.out.println("Li: " + leftIdx);
+        int rightIdx = right -1;
+        while(leftIdx <= rightIdx) {
+            while(leftIdx <= rightIdx && arr[leftIdx] <= pivot)
+                leftIdx++;
+            while(leftIdx <= rightIdx && arr[rightIdx] >= pivot)
+                rightIdx--;
+
+            if(leftIdx <= rightIdx) {
+                
+                swap(arr, leftIdx, rightIdx);
+                leftIdx++;
+                rightIdx--;
+            }
+            
+        }
+        swap(arr, leftIdx, right);
+    
+        return leftIdx;
+    }
+
+    /**
+     * Performs in-place quick select to return the k'th smallest number in arr.
+     *
+     * @param arr Array to find number in.
+     * @param k K'th smallest number must be returned.
+     * @return The k'th smallest number in arr.
+     */
+    public int quickSelect(int[] arr, int k) {
+        return helperQuickSelect(arr, k, 0, arr.length-1);
+    }
+
+    public int helperQuickSelect(int[] arr, int idx, int left, int right) {
+ 
+        if(left == right)
+            return arr[left];
+        int pivotIdx = partition(arr, left, right);
+        if(idx-1 == pivotIdx)
+            return arr[pivotIdx];
+        if(idx-1 < pivotIdx)
+            return helperQuickSelect(arr, idx, left, pivotIdx-1);
+        return helperQuickSelect(arr, idx, pivotIdx+1, right);
+    }
+
+    public void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+}
