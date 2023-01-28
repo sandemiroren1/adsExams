@@ -1,0 +1,79 @@
+package weblab;
+
+import java.util.*;
+
+public class Solution {
+
+    /**
+     * Sorts and merges `in[start, ..., start + inc - 1]` and `in[start + inc, ..., start + 2*inc - 1]` into `out`.
+     *
+     * @param in The input array, sorted in their intervals `in[start, ..., start + inc - 1]` and `in[start + inc, ..., start + 2*inc - 1]`.
+     * @param out The output array that should be updated to have `in[start, ..., start + inc - 1]` and `in[start + inc, ..., start + 2*inc - 1]`
+     *            in sorted fashion at `out[start, start + 2*inc - 1]`.
+     * @param start The index of the first element to be merged into out.
+     * @param inc The size of each of the intervals to be merged into out.
+     */
+    public static void merge(int[] in, int[] out, int start, int inc) {
+        if(in == null || out==null)
+            return;
+        
+        int secondIdx = start+inc;
+        int outIdx = start;
+        while(firstIdx < Math.min(out.length, start+inc) || secondIdx < Math.min(start+2*inc, out.length)) {
+           
+            if(!(firstIdx < Math.min(out.length, start+inc))) {
+                
+                out[outIdx++] = in[secondIdx++];
+                
+            }
+            else if(!(secondIdx < Math.min(start+2*inc, out.length))) {
+                out[outIdx++] = in[firstIdx++];
+            }
+            else {
+             //   System.out.println("Here");
+                if(in[firstIdx] < in[secondIdx]) {
+                    out[outIdx++] = in[firstIdx++];
+                }
+                else 
+                    out[outIdx++] = in[secondIdx++];
+            }
+
+        }
+        
+        // for(int i=start;i<Math.min(out.length, start+2*inc);i++) {
+        //     in[i] = out[i];
+        // }
+       
+    }
+
+    /**
+     * Sorts the input array using bottom-up merge sort.
+     *
+     * @param array The array to be sorted.
+     * @return The resulting sorted array.
+     */
+    public static int[] mergeSortBottomUp(int[] array) {
+        if(array == null)
+            return null;
+        if(array.length == 0)
+            return array.clone();
+        if(array.length == 1)
+            return array.clone();
+        int[] res = new int[array.length];
+         int levels = (int)Math.ceil(Math.log(array.length)/Math.log(2));
+        // System.out.println("levels: " + levels);
+        for(int i=0;i<levels;i++) {
+            
+            int noCalls = (int)Math.ceil(array.length/(1<<(i+1)));
+            
+            for(int j=0;j<array.length;j+=(1<<(i+1))) {
+                if(i==0)
+                    merge(array, res, j, 1<<(i));
+                else 
+                    merge(Arrays.copyOf(res, res.length), res, j, 1<<i);
+                
+            }
+        }
+        return res;
+    }
+}
