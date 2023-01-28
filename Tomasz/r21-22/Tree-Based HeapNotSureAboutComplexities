@@ -1,0 +1,138 @@
+package weblab;
+
+import java.util.*;
+
+class Heap extends LibraryHeap {
+
+    public Heap() {
+        super();
+    }
+
+    /**
+     * Constructor of the heap.
+     *
+     * @param key
+     *     the key value for the root.
+     */
+    public Heap(int key) {
+        super(key);
+    }
+
+    /**
+     * Performs the downheap operation starting from the specified node in O(log n).
+     *
+     * @param node
+     *     the node where the downheap starts.
+     */
+    @Override
+    public void downHeap(TreeNode node) {
+        while(node.hasRight() || node.hasLeft()) {
+            int min = node.getKey();
+            if(node.hasRight())
+                min = Math.min(min, node.getRight().getKey());
+            if(node.hasLeft())
+                min = Math.min(min, node.getLeft().getKey());
+            if(min == node.getKey())
+                return;
+            if(node.hasRight() && min == node.getRight().getKey()) {
+                swap(node, node.getRight());
+                node = node.getRight();
+                continue;
+            }
+            swap(node, node.getLeft());
+            node = node.getLeft();
+        }
+    }
+
+    /**
+     * Performs the upheap operation starting from the specified node in O(log n).
+     *
+     * @param node
+     *     the node where the upheap starts.
+     */
+    @Override
+    public void upHeap(TreeNode node) {
+       // int jup = 0;
+        while(node.hasParent() ) {
+           // jup++;
+            System.out.println("Currently at: " + node);
+            if(node.getParent().getKey() > node.getKey()) {
+                swap(node, node.getParent());
+                
+            }
+            node = node.getParent();
+        }
+    }
+
+    /**
+     * Turns a TreeNode into a LibraryHeap in O(n).
+     * This is an in-place algorithm, the heap is built on the TreeNode node itself.
+     *
+     * @param node
+     *     to be turned into a Heap.
+     * @return Heap containing the elements of node.
+     */
+    @Override
+    public Heap heapify(TreeNode node) {
+        Heap res = new Heap();
+        res.root = node;
+        int idx = 1;
+        TreeNode current = node;
+       
+        
+        LinkedList<TreeNode> order = (LinkedList<TreeNode>) bfsNodes(node);
+        res.size = order.size();
+        Collections.reverse(order);
+        for(TreeNode c : order) {
+            downHeap(c);
+        }
+        return res;
+    }
+    public List<TreeNode> bfsNodes(TreeNode node) {
+        List<TreeNode> res = new LinkedList<>();
+        
+        LinkedList<TreeNode> bfsQueue = new LinkedList<>();
+        bfsQueue.add(node);
+        //Set<TreeNode> added = new HashSet<>();
+        while(bfsQueue.size() != 0) {
+            TreeNode current = bfsQueue.poll();
+            System.out.println("Currently at: " + current);
+            res.add(current);
+            if(current.hasLeft())
+                bfsQueue.add(current.getLeft());
+            if(current.hasRight())
+                bfsQueue.add(current.getRight());
+
+
+        }
+
+        return res;
+    }
+    /**
+     * Does a breadth-first traversal of the heap and returns a list
+     * of all nodes in the order that they are found in O(n).
+     *
+     * @return List of heap elements in BFS order.
+     */
+    @Override
+    public List<Integer> bfs() {
+        List<Integer> res = new ArrayList<>();
+        TreeNode root = this.root;
+        LinkedList<TreeNode> bfsQueue = new LinkedList<>();
+        bfsQueue.add(root);
+        //Set<TreeNode> added = new HashSet<>();
+        while(bfsQueue.size() != 0) {
+
+            TreeNode current = bfsQueue.poll();
+            res.add(current.getKey());
+            if(current.hasLeft())
+                bfsQueue.add(current.getLeft());
+            if(current.hasRight())
+                bfsQueue.add(current.getRight());
+
+
+        }
+
+        return res;
+    }
+}
