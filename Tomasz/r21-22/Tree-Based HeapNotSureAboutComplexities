@@ -74,19 +74,34 @@ class Heap extends LibraryHeap {
      */
     @Override
     public Heap heapify(TreeNode node) {
+
+        if(node == null)
+            return null;
+
         Heap res = new Heap();
         res.root = node;
         int idx = 1;
         TreeNode current = node;
-       
+        //FIX (THANKS TO ŞAN)
+       postOrderDownheaping(node, res);
         
-        LinkedList<TreeNode> order = (LinkedList<TreeNode>) bfsNodes(node);
-        res.size = order.size();
-        Collections.reverse(order);
-        for(TreeNode c : order) {
-            downHeap(c);
-        }
+        //INCORECT BELOW
+        // LinkedList<TreeNode> order = (LinkedList<TreeNode>) bfsNodes(node);
+        // res.size = order.size();
+        // Collections.reverse(order);
+        // for(TreeNode c : order) {
+        //     downHeap(c);
+        // }
         return res;
+    }
+
+    public void postOrderDownheaping(TreeNode node, Heap res) {
+        if(node == null)
+            return;
+        postOrderDownheaping(node.getRight(), res);
+        postOrderDownheaping(node.getLeft(),res);
+        downHeap(node);
+        res.size++;
     }
     public List<TreeNode> bfsNodes(TreeNode node) {
         List<TreeNode> res = new LinkedList<>();
